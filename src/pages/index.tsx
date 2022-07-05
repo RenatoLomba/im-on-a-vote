@@ -15,7 +15,9 @@ const Home: NextPage = () => {
 
       <ul>
         {data.questions.map((question) => (
-          <li key={question.id}>{question.question}</li>
+          <li key={question.id}>
+            {question.question} | {question.createdAt.toDateString()}
+          </li>
         ))}
       </ul>
     </div>
