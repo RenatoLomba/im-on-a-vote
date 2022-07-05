@@ -3,9 +3,9 @@ import type { NextPage } from 'next';
 import { trpc } from '../utils/trpc';
 
 const Home: NextPage = () => {
-  const hello = trpc.useQuery(['hello', { text: 'Renato' }]);
+  const { data, isLoading } = trpc.useQuery(['getAllQuestions']);
 
-  if (hello.isLoading || !hello.data) {
+  if (isLoading || !data) {
     return <div>...Loading</div>;
   }
 
@@ -13,7 +13,11 @@ const Home: NextPage = () => {
     <div>
       <h1 className="font-bold text-blue-500">Hello world Tailwind CSS</h1>
 
-      <p>{hello.data.greeting}</p>
+      <ul>
+        {data.questions.map((question) => (
+          <li key={question.id}>{question.question}</li>
+        ))}
+      </ul>
     </div>
   );
 };
