@@ -1,12 +1,12 @@
 import type { NextPage } from 'next';
 
-import { trpc } from '../utils/trpc';
+import { trpc } from '../client/utils/trpc';
 
 const Home: NextPage = () => {
-  const { data, isLoading } = trpc.useQuery(['getAllQuestions']);
+  const { data, isLoading } = trpc.useQuery(['questions.getAll']);
 
   if (isLoading || !data) {
-    return <div>...Loading</div>;
+    return <div>Loading...</div>;
   }
 
   return (

@@ -3,7 +3,8 @@ import superjson from 'superjson';
 
 import { withTRPC } from '@trpc/next';
 
-import { AppRouter } from './api/trpc/[trpc]';
+import '../client/styles/globals.css';
+import { AppRouter } from '../server/router';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return <Component {...pageProps} />;
@@ -15,10 +16,6 @@ export default withTRPC<AppRouter>({
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr
      */
-    // const url = process.env.VERCEL_URL
-    //   ? `https://${process.env.VERCEL_URL}/api/trpc`
-    //   : 'http://localhost:3000/api/trpc';
-
     let url = 'http://localhost:3000/api/trpc';
 
     if (process.env.VERCEL_URL) {
@@ -32,7 +29,9 @@ export default withTRPC<AppRouter>({
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
-      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+      queryClientConfig: {
+        defaultOptions: { queries: { staleTime: 1000 * 60 } },
+      },
       transformer: superjson,
     };
   },
