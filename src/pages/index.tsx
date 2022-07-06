@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 
+import { QuestionForm } from '../client/components/question-form';
 import { trpc } from '../client/utils/trpc';
 
 const Home: NextPage = () => {
@@ -10,16 +11,18 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div>
-      <h1 className="font-bold text-blue-500">Hello world Tailwind CSS</h1>
+    <div className="p-6 flex flex-col">
+      <div>
+        <h1 className="text-2xl font-bold">Questions</h1>
 
-      <ul>
-        {data.questions.map((question) => (
-          <li key={question.id}>
-            {question.question} | {question.createdAt.toDateString()}
-          </li>
+        {data.map((pollQuestion) => (
+          <div key={pollQuestion.id} className="my-2">
+            {pollQuestion.question}
+          </div>
         ))}
-      </ul>
+      </div>
+
+      <QuestionForm />
     </div>
   );
 };
