@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import Link from 'next/link';
 
 import { QuestionForm } from '../client/components/question-form';
 import { trpc } from '../client/utils/trpc';
@@ -16,9 +17,15 @@ const Home: NextPage = () => {
         <h1 className="text-2xl font-bold">Questions</h1>
 
         {data.map((pollQuestion) => (
-          <div key={pollQuestion.id} className="my-2">
-            {pollQuestion.question}
-          </div>
+          <Link
+            key={pollQuestion.id}
+            href={`/question/${pollQuestion.id}`}
+            passHref
+          >
+            <a className="my-2 block">
+              <div>{pollQuestion.question}</div>
+            </a>
+          </Link>
         ))}
       </div>
 
