@@ -10,19 +10,25 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return <Component {...pageProps} />;
 };
 
+const getApplicationUrl = () => {
+  let url = 'http://localhost:3000/api/trpc';
+
+  if (process.env.VERCEL_URL) {
+    url = `https://${process.env.VERCEL_URL}/api/trpc`;
+  } else if (process.env.NODE_ENV === 'production') {
+    url = '/api/trpc';
+  }
+
+  return url;
+};
+
 export default withTRPC<AppRouter>({
   config() {
     /**
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr
      */
-    let url = 'http://localhost:3000/api/trpc';
-
-    if (process.env.VERCEL_URL) {
-      url = `https://${process.env.VERCEL_URL}/api/trpc`;
-    } else if (process.env.NODE_ENV === 'production') {
-      url = '/api/trpc';
-    }
+    const url = getApplicationUrl();
 
     return {
       url,
