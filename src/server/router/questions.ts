@@ -9,7 +9,13 @@ export const questionRouter = trpc
   .router()
   .query('getAll', {
     async resolve() {
-      return prisma.question.findMany();
+      return prisma.question.findMany({
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+        },
+      });
     },
   })
   .query('getBySlug', {
@@ -19,6 +25,11 @@ export const questionRouter = trpc
     async resolve({ input }) {
       return prisma.question.findUnique({
         where: { slug: input.slug },
+        select: {
+          id: true,
+          title: true,
+          options: true,
+        },
       });
     },
   })
@@ -28,6 +39,11 @@ export const questionRouter = trpc
     }),
     async resolve({ input }) {
       return prisma.question.create({
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+        },
         data: {
           title: input.question,
           slug: slugify(input.question, { lower: true, trim: true }),
