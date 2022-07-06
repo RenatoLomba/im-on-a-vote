@@ -5,14 +5,14 @@ import { trpc } from '../../client/utils/trpc';
 
 const QuestionPage: NextPage = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { slug } = router.query;
 
-  if (!id) return <div>No ID</div>;
-  if (Array.isArray(id)) return <div>To Many Ids</div>;
+  if (!slug) return <div>No Slug</div>;
+  if (Array.isArray(slug)) return <div>To Many Slugs</div>;
 
   const { data, isLoading, isError, error } = trpc.useQuery([
-    'questions.getById',
-    { id },
+    'questions.getBySlug',
+    { slug },
   ]);
 
   if (isLoading) {
@@ -29,7 +29,17 @@ const QuestionPage: NextPage = () => {
     return <div>Question not found</div>;
   }
 
-  return <div>Question {data.question}</div>;
+  return (
+    <div className="p-8 flex flex-col">
+      <h1 className="text-2xl font-bold">{data.title}</h1>
+
+      <ul>
+        {(data.options as string[])?.map((option) => (
+          <li key={option}>{option}</li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default QuestionPage;

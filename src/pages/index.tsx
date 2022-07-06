@@ -16,14 +16,10 @@ const Home: NextPage = () => {
       <div>
         <h1 className="text-2xl font-bold">Questions</h1>
 
-        {data.map((pollQuestion) => (
-          <Link
-            key={pollQuestion.id}
-            href={`/question/${pollQuestion.id}`}
-            passHref
-          >
+        {data.map((question) => (
+          <Link key={question.id} href={`/question/${question.slug}`} passHref>
             <a className="my-2 block">
-              <div>{pollQuestion.question}</div>
+              <div>{question.title}</div>
             </a>
           </Link>
         ))}

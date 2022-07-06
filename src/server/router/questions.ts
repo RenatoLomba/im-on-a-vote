@@ -1,3 +1,4 @@
+import slugify from 'slugify';
 import { z } from 'zod';
 
 import * as trpc from '@trpc/server';
@@ -8,16 +9,16 @@ export const questionRouter = trpc
   .router()
   .query('getAll', {
     async resolve() {
-      return prisma.pollQuestion.findMany();
+      return prisma.question.findMany();
     },
   })
-  .query('getById', {
+  .query('getBySlug', {
     input: z.object({
-      id: z.string().cuid(),
+      slug: z.string(),
     }),
     async resolve({ input }) {
-      return prisma.pollQuestion.findUnique({
-        where: { id: input.id },
+      return prisma.question.findUnique({
+        where: { slug: input.slug },
       });
     },
   })
@@ -26,9 +27,11 @@ export const questionRouter = trpc
       question: z.string().min(5).max(600),
     }),
     async resolve({ input }) {
-      return prisma.pollQuestion.create({
+      return prisma.question.create({
         data: {
-          question: input.question,
+          title: input.question,
+          slug: slugify(input.question, { lower: true, trim: true }),
+          options: [],
         },
       });
     },

@@ -12,9 +12,20 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
-model PollQuestion {
+model Question {
   id        String    @id @default(cuid())
   createdAt DateTime  @default(now())
   endsAt    DateTime?
-  question  String    @db.VarChar(5000)
+  title     String    @db.VarChar(5000)
+  slug      String    @unique
+  options   Json
+  votes     Vote[]
+}
+
+model Vote {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  choice     Int
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
 }
