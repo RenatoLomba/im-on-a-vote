@@ -1,6 +1,8 @@
 import slugify from 'slugify';
 import { z } from 'zod';
 
+import * as trpc from '@trpc/server';
+
 import { createRouter } from '../context';
 import { prisma } from '../db/client';
 
@@ -20,15 +22,24 @@ export const questionRouter = createRouter()
     input: z.object({
       slug: z.string(),
     }),
-    async resolve({ input }) {
-      return prisma.question.findUnique({
+    async resolve({ input, ctx }) {
+      if (!ctx.token)
+        throw new trpc.TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User does not have a token',
+        });
+
+      const question = await prisma.question.findUnique({
         where: { slug: input.slug },
         select: {
           id: true,
           title: true,
           options: true,
+          ownerToken: true,
         },
       });
+
+      return { question, isOwner: ctx.token === question?.ownerToken };
     },
   })
   .mutation('create', {
@@ -36,6 +47,12 @@ export const questionRouter = createRouter()
       question: z.string().min(5).max(600),
     }),
     async resolve({ input, ctx }) {
+      if (!ctx.token)
+        throw new trpc.TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User does not have a token',
+        });
+
       return prisma.question.create({
         select: {
           id: true,
@@ -43,7 +60,7 @@ export const questionRouter = createRouter()
           title: true,
         },
         data: {
-          ownerToken: ctx.pollToken,
+          ownerToken: ctx.token,
           title: input.question,
           slug: slugify(input.question, { lower: true, trim: true }),
           options: [],

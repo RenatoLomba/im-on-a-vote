@@ -7,18 +7,19 @@ export const QuestionForm: FC = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { mutateAsync: createQuestion, isLoading } = trpc.useMutation(
-    'questions.create',
-    {
-      onSuccess: () => {
-        trpcClient.invalidateQueries('questions.getAll');
+  const {
+    mutate: createQuestion,
+    isLoading,
+    error,
+  } = trpc.useMutation('questions.create', {
+    onSuccess: () => {
+      trpcClient.invalidateQueries('questions.getAll');
 
-        if (!inputRef.current) return;
+      if (!inputRef.current) return;
 
-        inputRef.current.value = '';
-      },
+      inputRef.current.value = '';
     },
-  );
+  });
 
   return (
     <form
@@ -30,7 +31,7 @@ export const QuestionForm: FC = () => {
 
         if (!question) return;
 
-        await createQuestion({ question });
+        createQuestion({ question });
       }}
     >
       <input
@@ -39,6 +40,10 @@ export const QuestionForm: FC = () => {
         className="border border-gray-400 disabled:bg-gray-400"
         type="text"
       />
+
+      {error && (
+        <div className="font-bold text-red-500 text-xl">{error.message}</div>
+      )}
     </form>
   );
 };
