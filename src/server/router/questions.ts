@@ -1,12 +1,10 @@
 import slugify from 'slugify';
 import { z } from 'zod';
 
-import * as trpc from '@trpc/server';
-
+import { createRouter } from '../context';
 import { prisma } from '../db/client';
 
-export const questionRouter = trpc
-  .router()
+export const questionRouter = createRouter()
   .query('getAll', {
     async resolve() {
       return prisma.question.findMany({
@@ -38,8 +36,6 @@ export const questionRouter = trpc
       question: z.string().min(5).max(600),
     }),
     async resolve({ input, ctx }) {
-      console.log(ctx);
-
       return prisma.question.create({
         select: {
           id: true,
@@ -47,7 +43,7 @@ export const questionRouter = trpc
           title: true,
         },
         data: {
-          ownerToken: 'teste',
+          ownerToken: ctx.pollToken,
           title: input.question,
           slug: slugify(input.question, { lower: true, trim: true }),
           options: [],
