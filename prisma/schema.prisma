@@ -13,13 +13,14 @@ datasource db {
 }
 
 model Question {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  endsAt    DateTime?
-  title     String    @db.VarChar(5000)
-  slug      String    @unique
-  options   Json
-  votes     Vote[]
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  endsAt     DateTime?
+  title      String    @db.VarChar(5000)
+  slug       String    @unique
+  ownerToken String    @unique @db.VarChar(255)
+  options    Json
+  votes      Vote[]
 }
 
 model Vote {
