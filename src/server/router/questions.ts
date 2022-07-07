@@ -37,7 +37,9 @@ export const questionRouter = trpc
     input: z.object({
       question: z.string().min(5).max(600),
     }),
-    async resolve({ input }) {
+    async resolve({ input, ctx }) {
+      console.log(ctx);
+
       return prisma.question.create({
         select: {
           id: true,
@@ -45,6 +47,7 @@ export const questionRouter = trpc
           title: true,
         },
         data: {
+          ownerToken: 'teste',
           title: input.question,
           slug: slugify(input.question, { lower: true, trim: true }),
           options: [],
