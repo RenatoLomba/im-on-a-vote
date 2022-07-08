@@ -18,9 +18,11 @@ model Question {
   endsAt     DateTime?
   title      String    @db.VarChar(5000)
   slug       String    @unique
-  ownerToken String    @unique @db.VarChar(255)
+  ownerToken String    @db.VarChar(255)
   options    Json
   votes      Vote[]
+
+  @@index([ownerToken])
 }
 
 model Vote {
