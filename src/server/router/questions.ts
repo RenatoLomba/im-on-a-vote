@@ -9,6 +9,8 @@ import { prisma } from '../db/client';
 export const questionRouter = createRouter()
   .query('getAllMyQuestions', {
     async resolve({ ctx }) {
+      if (!ctx.token) return [];
+
       return prisma.question.findMany({
         where: {
           ownerToken: {
