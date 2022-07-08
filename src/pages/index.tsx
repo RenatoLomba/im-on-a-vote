@@ -4,7 +4,6 @@ import superjson from 'superjson';
 
 import { createSSGHelpers } from '@trpc/react/ssg';
 
-import { QuestionForm } from '../client/components/question-form';
 import { trpc } from '../client/utils/trpc';
 import { appRouter } from '../server/router';
 
@@ -38,18 +37,35 @@ export default function Home() {
   return (
     <div className="p-6 flex flex-col">
       <div>
-        <h1 className="text-2xl font-bold">Questions</h1>
+        <h1 className="text-2xl font-bold">Your Questions</h1>
 
-        {data.map((question) => (
-          <Link key={question.id} href={`/question/${question.slug}`} passHref>
-            <a className="my-2 block">
-              <div>{question.title}</div>
-            </a>
-          </Link>
-        ))}
+        {data.map((question) => {
+          const createdAtISOString = question.createdAt.toISOString();
+          const createdAtFormattedString =
+            question.createdAt.toLocaleDateString('en', {
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+            });
+
+          return (
+            <div key={question.id} className="flex flex-col my-2">
+              <Link href={`/question/${question.slug}`} passHref>
+                <a>
+                  <div>{question.title}</div>
+                </a>
+              </Link>
+              <time dateTime={createdAtISOString}>
+                Created on {createdAtFormattedString}
+              </time>
+            </div>
+          );
+        })}
       </div>
 
-      <QuestionForm />
+      <Link href={'/question/create'} passHref>
+        <a>Create New Question</a>
+      </Link>
     </div>
   );
 }

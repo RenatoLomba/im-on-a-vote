@@ -1,8 +1,9 @@
-import { FC, useRef } from 'react';
+import { useRef } from 'react';
 
-import { trpc } from '../utils/trpc';
+import { getValidationErrorsByField } from '../../client/utils/get-validation-errors-by-field';
+import { trpc } from '../../client/utils/trpc';
 
-export const QuestionForm: FC = () => {
+export default function CreateQuestionPage() {
   const trpcClient = trpc.useContext();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -23,7 +24,7 @@ export const QuestionForm: FC = () => {
 
   return (
     <form
-      className="flex flex-col"
+      className="flex flex-col p-6"
       onSubmit={async (e) => {
         e.preventDefault();
 
@@ -42,8 +43,10 @@ export const QuestionForm: FC = () => {
       />
 
       {error && (
-        <div className="font-bold text-red-500 text-xl">{error.message}</div>
+        <div className="font-bold text-red-500 text-xl">
+          {getValidationErrorsByField(error, 'question')?.[0]}
+        </div>
       )}
     </form>
   );
-};
+}

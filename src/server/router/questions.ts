@@ -11,7 +11,7 @@ export const questionRouter = createRouter()
     async resolve({ ctx }) {
       if (!ctx.token) return [];
 
-      return prisma.question.findMany({
+      const questions = await prisma.question.findMany({
         where: {
           ownerToken: {
             equals: ctx.token,
@@ -24,6 +24,8 @@ export const questionRouter = createRouter()
           createdAt: true,
         },
       });
+
+      return questions;
     },
   })
   .query('getBySlug', {
