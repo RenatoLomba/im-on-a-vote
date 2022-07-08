@@ -36,9 +36,17 @@ export default function Home() {
 
   return (
     <div className="p-6 flex flex-col">
-      <div>
+      <div className="flex w-full justify-between items-start">
         <h1 className="text-2xl font-bold">Your Questions</h1>
 
+        <Link href={'/question/create'} passHref>
+          <a className="bg-gray-300 rounded text-gray-800 p-3">
+            Create New Question
+          </a>
+        </Link>
+      </div>
+
+      <div className="flex flex-col items-start">
         {data.map((question) => {
           const createdAtISOString = question.createdAt.toISOString();
           const createdAtFormattedString =
@@ -49,23 +57,22 @@ export default function Home() {
             });
 
           return (
-            <div key={question.id} className="flex flex-col my-2">
-              <Link href={`/question/${question.slug}`} passHref>
-                <a>
-                  <div>{question.title}</div>
-                </a>
-              </Link>
-              <time dateTime={createdAtISOString}>
-                Created on {createdAtFormattedString}
-              </time>
-            </div>
+            <Link
+              key={question.id}
+              href={`/question/${question.slug}`}
+              passHref
+            >
+              <a className="my-2">
+                <strong className="block">{question.title}</strong>
+
+                <time dateTime={createdAtISOString}>
+                  Created on {createdAtFormattedString}
+                </time>
+              </a>
+            </Link>
           );
         })}
       </div>
-
-      <Link href={'/question/create'} passHref>
-        <a>Create New Question</a>
-      </Link>
     </div>
   );
 }
