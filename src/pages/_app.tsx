@@ -1,13 +1,20 @@
 import { AppType } from 'next/dist/shared/lib/utils';
+import { ToastContainer } from 'react-toastify';
 import superjson from 'superjson';
 
 import { withTRPC } from '@trpc/next';
 
 import '../client/styles/globals.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { AppRouter } from '../server/router';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Component {...pageProps} />
+      <ToastContainer />
+    </>
+  );
 };
 
 const getBaseUrl = () => {

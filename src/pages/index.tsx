@@ -40,7 +40,7 @@ export default function Home() {
         <h1 className="text-2xl font-bold">Your Questions</h1>
 
         <Link href={'/question/create'} passHref>
-          <a className="bg-gray-300 rounded text-gray-800 p-3">
+          <a className="bg-gray-200 rounded text-gray-800 p-3">
             Create New Question
           </a>
         </Link>
