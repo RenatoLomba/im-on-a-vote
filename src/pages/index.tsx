@@ -1,10 +1,34 @@
-import type { NextPage } from 'next';
+import type { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
+import superjson from 'superjson';
+
+import { createSSGHelpers } from '@trpc/react/ssg';
 
 import { QuestionForm } from '../client/components/question-form';
 import { trpc } from '../client/utils/trpc';
+import { appRouter } from '../server/router';
 
-const Home: NextPage = () => {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const token = context.req.cookies['poll-token'];
+
+  const ssg = await createSSGHelpers({
+    router: appRouter,
+    ctx: {
+      token,
+    },
+    transformer: superjson,
+  });
+
+  await ssg.fetchQuery('questions.getAllMyQuestions');
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+  };
+}
+
+export default function Home() {
   const { data, isLoading } = trpc.useQuery(['questions.getAllMyQuestions']);
 
   if (isLoading || !data) {
@@ -28,6 +52,4 @@ const Home: NextPage = () => {
       <QuestionForm />
     </div>
   );
-};
-
-export default Home;
+}

@@ -10,39 +10,30 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return <Component {...pageProps} />;
 };
 
-const getApplicationUrl = () => {
-  let url = 'http://localhost:3000/api/trpc';
-
-  if (process.env.VERCEL_URL) {
-    url = `https://${process.env.VERCEL_URL}/api/trpc`;
-  } else if (process.env.NODE_ENV === 'production') {
-    url = '/api/trpc';
+const getBaseUrl = () => {
+  // CLIENT SIDE
+  if (typeof window !== 'undefined') {
+    return '';
   }
 
-  return url;
+  // SSR PROD
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  // SSR DEV
+  return `http://localhost:${process.env.PORT ?? 3000}`;
 };
 
 export default withTRPC<AppRouter>({
   config() {
-    /**
-     * If you want to use SSR, you need to use the server's full URL
-     * @link https://trpc.io/docs/ssr
-     */
-    const url = getApplicationUrl();
-
     return {
-      url,
-      /**
-       * @link https://react-query.tanstack.com/reference/QueryClient
-       */
-      queryClientConfig: {
-        defaultOptions: { queries: { staleTime: 1000 * 60 } },
-      },
+      url: `${getBaseUrl()}/api/trpc`,
       transformer: superjson,
+      queryClientConfig: {
+        defaultOptions: { queries: { staleTime: 1000 * 60 * 2 } },
+      },
     };
   },
-  /**
-   * @link https://trpc.io/docs/ssr
-   */
   ssr: false,
 })(MyApp);

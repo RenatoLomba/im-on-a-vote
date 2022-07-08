@@ -19,6 +19,7 @@ export const questionRouter = createRouter()
           id: true,
           slug: true,
           title: true,
+          createdAt: true,
         },
       });
     },
