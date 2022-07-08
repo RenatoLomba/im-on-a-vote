@@ -7,9 +7,14 @@ import { createRouter } from '../context';
 import { prisma } from '../db/client';
 
 export const questionRouter = createRouter()
-  .query('getAll', {
-    async resolve() {
+  .query('getAllMyQuestions', {
+    async resolve({ ctx }) {
       return prisma.question.findMany({
+        where: {
+          ownerToken: {
+            equals: ctx.token,
+          },
+        },
         select: {
           id: true,
           slug: true,
@@ -23,12 +28,6 @@ export const questionRouter = createRouter()
       slug: z.string(),
     }),
     async resolve({ input, ctx }) {
-      if (!ctx.token)
-        throw new trpc.TRPCError({
-          code: 'UNAUTHORIZED',
-          message: 'User does not have a token',
-        });
-
       const question = await prisma.question.findUnique({
         where: { slug: input.slug },
         select: {

@@ -13,7 +13,7 @@ export const QuestionForm: FC = () => {
     error,
   } = trpc.useMutation('questions.create', {
     onSuccess: () => {
-      trpcClient.invalidateQueries('questions.getAll');
+      trpcClient.invalidateQueries('questions.getAllMyQuestions');
 
       if (!inputRef.current) return;
 

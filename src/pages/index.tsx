@@ -5,7 +5,7 @@ import { QuestionForm } from '../client/components/question-form';
 import { trpc } from '../client/utils/trpc';
 
 const Home: NextPage = () => {
-  const { data, isLoading } = trpc.useQuery(['questions.getAll']);
+  const { data, isLoading } = trpc.useQuery(['questions.getAllMyQuestions']);
 
   if (isLoading || !data) {
     return <div>Loading...</div>;
