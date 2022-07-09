@@ -7,12 +7,16 @@ import { questionRouter } from './questions';
 export const appRouter = createRouter()
   .transformer(superjson)
   .formatError(({ shape, error }) => {
+    const zodValidationErrorCause =
+      error.cause instanceof ZodError ? error.cause.flatten() : null;
+
+    const validationError = zodValidationErrorCause?.fieldErrors;
+
     return {
       ...shape,
       data: {
         ...shape.data,
-        validationError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
+        validationError,
       },
     };
   })

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,11 +12,13 @@ interface ICreateQuestionFormFields {
 interface ICreateQuestionFormProps {
   onSubmit: (data: ICreateQuestionFormFields) => void;
   isCreating: boolean;
+  isSuccess: boolean;
 }
 
 export const CreateQuestionForm: FC<ICreateQuestionFormProps> = ({
   onSubmit,
   isCreating,
+  isSuccess,
 }) => {
   const {
     register,
@@ -27,6 +29,12 @@ export const CreateQuestionForm: FC<ICreateQuestionFormProps> = ({
     resolver: zodResolver(createQuestionValidator),
   });
 
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+    }
+  }, [isSuccess]);
+
   return (
     <div className="py-12 px-4 max-w-4xl mx-auto min-h-screen flex flex-col">
       <h2 className="text-2xl font-bold">Create Question</h2>
@@ -35,8 +43,6 @@ export const CreateQuestionForm: FC<ICreateQuestionFormProps> = ({
         className="w-full flex flex-col gap-6 mt-8 items-start"
         onSubmit={handleSubmit((data) => {
           onSubmit(data);
-
-          reset();
         })}
       >
         <label className="block w-full">
