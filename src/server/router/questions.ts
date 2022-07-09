@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import * as trpc from '@trpc/server';
 
+import { createQuestionValidator } from '../../shared/validators/create-question-validator';
 import { createRouter } from '../context';
 import { prisma } from '../db/client';
 
@@ -47,9 +48,7 @@ export const questionRouter = createRouter()
     },
   })
   .mutation('create', {
-    input: z.object({
-      question: z.string().min(5).max(600),
-    }),
+    input: createQuestionValidator,
     async resolve({ input, ctx }) {
       if (!ctx.token)
         throw new trpc.TRPCError({

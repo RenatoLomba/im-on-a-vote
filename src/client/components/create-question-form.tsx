@@ -1,6 +1,10 @@
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { createQuestionValidator } from '../../shared/validators/create-question-validator';
+
 interface ICreateQuestionFormFields {
   question: string;
 }
@@ -19,7 +23,9 @@ export const CreateQuestionForm: FC<ICreateQuestionFormProps> = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ICreateQuestionFormFields>();
+  } = useForm<ICreateQuestionFormFields>({
+    resolver: zodResolver(createQuestionValidator),
+  });
 
   return (
     <div className="py-12 px-4 max-w-4xl mx-auto min-h-screen flex flex-col">
@@ -36,20 +42,7 @@ export const CreateQuestionForm: FC<ICreateQuestionFormProps> = ({
         <label className="block w-full">
           <span className="text-lg">Your Question</span>
           <input
-            {...register('question', {
-              required: {
-                value: true,
-                message: 'Required field',
-              },
-              minLength: {
-                value: 5,
-                message: 'Min Length 5',
-              },
-              maxLength: {
-                value: 600,
-                message: 'Max Length 600',
-              },
-            })}
+            {...register('question')}
             placeholder="How do magnets work?"
             type="text"
             className="mt-1 block w-full border border-gray-300 shadow-sm
