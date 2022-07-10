@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 
@@ -28,10 +29,15 @@ export default function CreateQuestionPage() {
   });
 
   return (
-    <CreateQuestionForm
-      isSuccess={isSuccess}
-      isCreating={isLoading}
-      onSubmit={createQuestion}
-    />
+    <>
+      <Head>
+        <title>Create Question | ImOnVote</title>
+      </Head>
+      <CreateQuestionForm
+        isSuccess={isSuccess}
+        isCreating={isLoading}
+        onSubmit={createQuestion}
+      />
+    </>
   );
 }

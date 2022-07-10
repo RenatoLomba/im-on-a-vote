@@ -4,6 +4,7 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import superjson from 'superjson';
 
 import { createSSGHelpers } from '@trpc/react/ssg';
@@ -92,30 +93,35 @@ export default function QuestionResultPage(
   const questionOptions = question.options as { id: string; text: string }[];
 
   return (
-    <div className="container">
-      <DynamicQuestionOwner questionOwnerToken={question.ownerToken} />
+    <>
+      <Head>
+        <title>{question.title} Results | ImOnVote</title>
+      </Head>
+      <div className="container">
+        <DynamicQuestionOwner questionOwnerToken={question.ownerToken} />
 
-      <h1 className="mt-5 text-2xl font-bold mb-5">
-        Results on Question{' '}
-        <span className="text-blue-400">{question.title}</span>
-      </h1>
+        <h1 className="mt-5 text-2xl font-bold mb-5">
+          Results on Question{' '}
+          <span className="text-blue-400">{question.title}</span>
+        </h1>
 
-      <DynamicVotedOn
-        questionId={question.id}
-        questionSlug={slug}
-        questionOptions={questionOptions}
-      />
+        <DynamicVotedOn
+          questionId={question.id}
+          questionSlug={slug}
+          questionOptions={questionOptions}
+        />
 
-      <ul className="mt-10">
-        {questionOptions.map((option, index) => (
-          <li key={option.id}>
-            <p>
-              <strong>{option.text}: </strong>
-              <span>{votes[index] ?? 0}</span>
-            </p>
-          </li>
-        ))}
-      </ul>
-    </div>
+        <ul className="mt-10">
+          {questionOptions.map((option, index) => (
+            <li key={option.id}>
+              <p>
+                <strong>{option.text}: </strong>
+                <span>{votes[index] ?? 0}</span>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 }

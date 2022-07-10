@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 import { toast } from 'react-toastify';
@@ -67,32 +68,37 @@ export const QuestionDetails: FC<{ slug: string }> = ({ slug }) => {
   };
 
   return (
-    <div className="container">
-      <DynamicQuestionOwner questionOwnerToken={question.ownerToken} />
+    <>
+      <Head>
+        <title>Vote on {question.title} | ImOnVote</title>
+      </Head>
+      <div className="container">
+        <DynamicQuestionOwner questionOwnerToken={question.ownerToken} />
 
-      <div className="mt-5">
-        <h1 className="text-2xl font-bold mb-5">{question.title}</h1>
+        <div className="mt-5">
+          <h1 className="text-2xl font-bold mb-5">{question.title}</h1>
 
-        {isVoteSuccess && <div>Voted!</div>}
+          {isVoteSuccess && <div>Voted!</div>}
 
-        {isVoting && <div>Voting...</div>}
+          {isVoting && <div>Voting...</div>}
 
-        {!isVoting && !isVoteSuccess && (
-          <ul className="flex flex-col align-start gap-2">
-            {(question.options as { id: string; text: string }[])?.map(
-              (option, index) => {
-                return (
-                  <li key={option.id}>
-                    <button onClick={() => handleOptionClick(index)}>
-                      {option.text}
-                    </button>
-                  </li>
-                );
-              },
-            )}
-          </ul>
-        )}
+          {!isVoting && !isVoteSuccess && (
+            <ul className="flex flex-col align-start gap-2">
+              {(question.options as { id: string; text: string }[])?.map(
+                (option, index) => {
+                  return (
+                    <li key={option.id}>
+                      <button onClick={() => handleOptionClick(index)}>
+                        {option.text}
+                      </button>
+                    </li>
+                  );
+                },
+              )}
+            </ul>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

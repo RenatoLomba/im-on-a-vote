@@ -1,4 +1,5 @@
 import type { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 import superjson from 'superjson';
 
@@ -35,44 +36,49 @@ export default function Home() {
   }
 
   return (
-    <div className="container">
-      <div className="flex w-full justify-between items-start">
-        <h1 className="text-2xl font-bold">Your Questions</h1>
+    <>
+      <Head>
+        <title>Your Questions | ImOnVote</title>
+      </Head>
+      <div className="container">
+        <div className="flex w-full justify-between items-start">
+          <h1 className="text-2xl font-bold">Your Questions</h1>
 
-        <Link href={'/question/create'} passHref>
-          <a className="bg-gray-200 rounded text-gray-800 p-3">
-            Create New Question
-          </a>
-        </Link>
+          <Link href={'/question/create'} passHref>
+            <a className="bg-gray-200 rounded text-gray-800 p-3">
+              Create New Question
+            </a>
+          </Link>
+        </div>
+
+        <div className="flex flex-col items-start">
+          {data.map((question) => {
+            const createdAtISOString = question.createdAt.toISOString();
+            const createdAtFormattedString =
+              question.createdAt.toLocaleDateString('en', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+              });
+
+            return (
+              <Link
+                key={question.id}
+                href={`/question/${question.slug}`}
+                passHref
+              >
+                <a className="my-2">
+                  <strong className="block">{question.title}</strong>
+
+                  <time dateTime={createdAtISOString}>
+                    Created on {createdAtFormattedString}
+                  </time>
+                </a>
+              </Link>
+            );
+          })}
+        </div>
       </div>
-
-      <div className="flex flex-col items-start">
-        {data.map((question) => {
-          const createdAtISOString = question.createdAt.toISOString();
-          const createdAtFormattedString =
-            question.createdAt.toLocaleDateString('en', {
-              day: '2-digit',
-              month: 'long',
-              year: 'numeric',
-            });
-
-          return (
-            <Link
-              key={question.id}
-              href={`/question/${question.slug}`}
-              passHref
-            >
-              <a className="my-2">
-                <strong className="block">{question.title}</strong>
-
-                <time dateTime={createdAtISOString}>
-                  Created on {createdAtFormattedString}
-                </time>
-              </a>
-            </Link>
-          );
-        })}
-      </div>
-    </div>
+    </>
   );
 }
