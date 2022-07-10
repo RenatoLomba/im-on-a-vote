@@ -75,4 +75,25 @@ export const questionRouter = createRouter()
         },
       });
     },
+  })
+  .mutation('vote-on-question', {
+    input: z.object({
+      questionId: z.string().cuid(),
+      option: z.number().min(0).max(10),
+    }),
+    async resolve({ input, ctx }) {
+      if (!ctx.token)
+        throw new trpc.TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User does not have a token',
+        });
+
+      return prisma.vote.create({
+        data: {
+          choice: input.option,
+          voterToken: ctx.token,
+          questionId: input.questionId,
+        },
+      });
+    },
   });

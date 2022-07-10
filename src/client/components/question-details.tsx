@@ -37,13 +37,17 @@ export const QuestionDetails: FC<{ slug: string }> = ({ slug }) => {
     <div className="container">
       <DynamicQuestionOwner questionOwnerToken={question.ownerToken} />
 
-      <h1 className="text-2xl font-bold">{question.title}</h1>
+      <div>
+        <h1 className="text-2xl font-bold">{question.title}</h1>
 
-      <ul>
-        {(question.options as { id: string; text: string }[])?.map((option) => (
-          <li key={option.id}>{option.text}</li>
-        ))}
-      </ul>
+        <ul>
+          {(question.options as { id: string; text: string }[])?.map(
+            (option) => (
+              <li key={option.id}>{option.text}</li>
+            ),
+          )}
+        </ul>
+      </div>
     </div>
   );
 };
