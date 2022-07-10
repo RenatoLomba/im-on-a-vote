@@ -89,11 +89,49 @@ export const questionRouter = createRouter()
         });
 
       return prisma.vote.create({
+        select: {
+          id: true,
+          choice: true,
+        },
         data: {
           choice: input.option,
           voterToken: ctx.token,
           questionId: input.questionId,
         },
       });
+    },
+  })
+  .query('getQuestionResult', {
+    input: z.object({
+      slug: z.string(),
+    }),
+    async resolve({ input }) {
+      const question = await prisma.question.findUnique({
+        where: { slug: input.slug },
+        select: {
+          id: true,
+          title: true,
+          options: true,
+          ownerToken: true,
+          votes: {
+            select: {
+              id: true,
+              choice: true,
+            },
+          },
+        },
+      })!;
+
+      const votes = question?.votes.reduce((acc, vote) => {
+        const currentVotes = { ...acc };
+        if (!currentVotes[vote.choice]) {
+          currentVotes[vote.choice] = 1;
+        } else {
+          currentVotes[vote.choice] += 1;
+        }
+        return currentVotes;
+      }, {} as Record<number, number>)!;
+
+      return { question, votes };
     },
   });
