@@ -111,7 +111,7 @@ export default function QuestionResultPage(
           <li key={option.id}>
             <p>
               <strong>{option.text}: </strong>
-              <span>{votes[index]}</span>
+              <span>{votes[index] ?? 0}</span>
             </p>
           </li>
         ))}

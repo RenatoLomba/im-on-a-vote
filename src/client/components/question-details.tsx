@@ -31,6 +31,7 @@ export const QuestionDetails: FC<{ slug: string }> = ({ slug }) => {
       router.push(`/question/${slug}/result`);
 
       queryClient.invalidateQueries('questions.getMyVote');
+      queryClient.invalidateQueries('questions.getQuestionResult');
     },
     onError(error) {
       toast(extractErrorMessage(error), {
