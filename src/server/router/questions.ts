@@ -13,6 +13,7 @@ export const questionRouter = createRouter()
       if (!ctx.token) return [];
 
       const questions = await prisma.question.findMany({
+        orderBy: { createdAt: 'desc' },
         where: {
           ownerToken: {
             equals: ctx.token,

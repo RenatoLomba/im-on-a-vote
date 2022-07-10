@@ -3,14 +3,13 @@ import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { createQuestionValidator } from '../../shared/validators/create-question-validator';
-
-interface ICreateQuestionFormFields {
-  question: string;
-}
+import {
+  CreateQuestionInputType,
+  createQuestionValidator,
+} from '../../shared/validators/create-question-validator';
 
 interface ICreateQuestionFormProps {
-  onSubmit: (data: ICreateQuestionFormFields) => void;
+  onSubmit: (data: CreateQuestionInputType) => void;
   isCreating: boolean;
   isSuccess: boolean;
 }
@@ -25,7 +24,7 @@ export const CreateQuestionForm: FC<ICreateQuestionFormProps> = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ICreateQuestionFormFields>({
+  } = useForm<CreateQuestionInputType>({
     resolver: zodResolver(createQuestionValidator),
   });
 
@@ -42,6 +41,8 @@ export const CreateQuestionForm: FC<ICreateQuestionFormProps> = ({
       <form
         className="w-full flex flex-col gap-6 mt-8 items-start"
         onSubmit={handleSubmit((data) => {
+          if (isCreating) return;
+
           onSubmit(data);
         })}
       >
@@ -55,7 +56,7 @@ export const CreateQuestionForm: FC<ICreateQuestionFormProps> = ({
               focus:ring focus:ring-blue-500 text-gray-800"
           />
           {errors.question && (
-            <span className="mt-2 block text-red-500 tracking-wide">
+            <span className="mt-2 block text-red-400 tracking-wide">
               {errors.question.message}
             </span>
           )}
