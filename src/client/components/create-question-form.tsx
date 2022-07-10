@@ -92,7 +92,7 @@ export const CreateQuestionForm: FC<ICreateQuestionFormProps> = ({
             </span>
           )}
 
-          <div className="grid grid-cols-3 gap-5 mt-2">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 mt-2">
             {fields.map((field, index) => (
               <label key={field.id} className="block">
                 <div className="flex align-center gap-1">
