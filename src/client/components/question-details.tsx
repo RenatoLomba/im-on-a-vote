@@ -34,7 +34,7 @@ export const QuestionDetails: FC<{ slug: string }> = ({ slug }) => {
   const { question } = data;
 
   return (
-    <div className="p-8 flex flex-col">
+    <div className="container">
       <DynamicQuestionOwner questionOwnerToken={question.ownerToken} />
 
       <h1 className="text-2xl font-bold">{question.title}</h1>

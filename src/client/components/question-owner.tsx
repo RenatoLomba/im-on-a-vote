@@ -10,7 +10,7 @@ const QuestionOwner: FC<QuestionOwnerProps> = ({ questionOwnerToken }) => {
   return (
     <>
       {isOwner && (
-        <div className="m-4 bg-red-700 rounded-md p-3 text-white">
+        <div className="bg-red-700 rounded-md p-3 text-white">
           You made this!
         </div>
       )}

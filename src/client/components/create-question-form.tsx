@@ -45,7 +45,7 @@ export const CreateQuestionForm: FC<ICreateQuestionFormProps> = ({
   }, [isSuccess]);
 
   return (
-    <div className="py-12 px-4 max-w-4xl mx-auto min-h-screen flex flex-col">
+    <div className="container">
       <h2 className="text-2xl font-bold">Create Question</h2>
 
       <form

@@ -35,7 +35,7 @@ export default function Home() {
   }
 
   return (
-    <div className="p-6 flex flex-col">
+    <div className="container">
       <div className="flex w-full justify-between items-start">
         <h1 className="text-2xl font-bold">Your Questions</h1>
 
