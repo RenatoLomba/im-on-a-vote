@@ -35,7 +35,7 @@ export const questionRouter = createRouter()
     input: z.object({
       slug: z.string(),
     }),
-    async resolve({ input, ctx }) {
+    async resolve({ input }) {
       const question = await prisma.question.findUnique({
         where: { slug: input.slug },
         select: {
@@ -46,7 +46,7 @@ export const questionRouter = createRouter()
         },
       });
 
-      return { question, isOwner: ctx.token === question?.ownerToken };
+      return { question };
     },
   })
   .mutation('create', {

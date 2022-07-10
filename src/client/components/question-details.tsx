@@ -1,6 +1,15 @@
+import dynamic from 'next/dynamic';
 import { FC } from 'react';
 
 import { trpc } from '../utils/trpc';
+import { QuestionOwnerProps } from './question-owner';
+
+const DynamicQuestionOwner = dynamic<QuestionOwnerProps>(
+  () => import('./question-owner'),
+  {
+    ssr: false,
+  },
+);
 
 export const QuestionDetails: FC<{ slug: string }> = ({ slug }) => {
   const { data, isLoading, isError, error } = trpc.useQuery([
@@ -22,15 +31,11 @@ export const QuestionDetails: FC<{ slug: string }> = ({ slug }) => {
     return <div>Question not found</div>;
   }
 
-  const { question, isOwner } = data;
+  const { question } = data;
 
   return (
     <div className="p-8 flex flex-col">
-      {isOwner && (
-        <div className="m-4 bg-red-700 rounded-md p-3 text-white">
-          You made this!
-        </div>
-      )}
+      <DynamicQuestionOwner questionOwnerToken={question.ownerToken} />
 
       <h1 className="text-2xl font-bold">{question.title}</h1>
 
