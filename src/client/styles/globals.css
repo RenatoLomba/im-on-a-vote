@@ -7,5 +7,5 @@ body {
 }
 
 .container {
-  @apply py-12 px-4 max-w-4xl mx-auto min-h-screen flex flex-col;
+  @apply py-12 px-4 max-w-4xl mx-auto min-h-screen flex flex-col items-start;
 }

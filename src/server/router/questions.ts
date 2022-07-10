@@ -134,4 +134,27 @@ export const questionRouter = createRouter()
 
       return { question, votes };
     },
+  })
+  .query('getMyVote', {
+    input: z.object({
+      questionId: z.string().cuid(),
+    }),
+    async resolve({ input, ctx }) {
+      if (!ctx.token)
+        throw new trpc.TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User does not have a token',
+        });
+
+      return prisma.vote.findFirst({
+        where: {
+          voterToken: ctx.token,
+          questionId: input.questionId,
+        },
+        select: {
+          id: true,
+          choice: true,
+        },
+      });
+    },
   });

@@ -1,7 +1,9 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
+import { toast } from 'react-toastify';
 
+import { extractErrorMessage } from '../utils/extract-error-message';
 import { trpc } from '../utils/trpc';
 import { QuestionOwnerProps } from './question-owner';
 
@@ -13,6 +15,7 @@ const DynamicQuestionOwner = dynamic<QuestionOwnerProps>(
 );
 
 export const QuestionDetails: FC<{ slug: string }> = ({ slug }) => {
+  const queryClient = trpc.useContext();
   const router = useRouter();
   const { data, isLoading, isError, error } = trpc.useQuery([
     'questions.getBySlug',
@@ -26,6 +29,14 @@ export const QuestionDetails: FC<{ slug: string }> = ({ slug }) => {
   } = trpc.useMutation('questions.vote-on-question', {
     onSuccess() {
       router.push(`/question/${slug}/result`);
+
+      queryClient.invalidateQueries('questions.getMyVote');
+    },
+    onError(error) {
+      toast(extractErrorMessage(error), {
+        type: 'error',
+        theme: 'colored',
+      });
     },
   });
 

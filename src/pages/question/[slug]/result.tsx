@@ -9,12 +9,20 @@ import superjson from 'superjson';
 import { createSSGHelpers } from '@trpc/react/ssg';
 
 import { QuestionOwnerProps } from '../../../client/components/question-owner';
+import { VotedOnProps } from '../../../client/components/voted-on';
 import { trpc } from '../../../client/utils/trpc';
 import { prisma } from '../../../server/db/client';
 import { appRouter } from '../../../server/router';
 
 const DynamicQuestionOwner = dynamic<QuestionOwnerProps>(
   () => import('../../../client/components/question-owner'),
+  {
+    ssr: false,
+  },
+);
+
+const DynamicVotedOn = dynamic<VotedOnProps>(
+  () => import('../../../client/components/voted-on'),
   {
     ssr: false,
   },
@@ -81,6 +89,7 @@ export default function QuestionResultPage(
   if (!data?.question) return <div>Question not found</div>;
 
   const { question, votes } = data;
+  const questionOptions = question.options as { id: string; text: string }[];
 
   return (
     <div className="container">
@@ -91,17 +100,21 @@ export default function QuestionResultPage(
         <span className="text-blue-400">{question.title}</span>
       </h1>
 
-      <ul>
-        {(question.options as { id: string; text: string }[]).map(
-          (option, index) => (
-            <li key={option.id}>
-              <p>
-                <strong>{option.text}: </strong>
-                <span>{votes[index]}</span>
-              </p>
-            </li>
-          ),
-        )}
+      <DynamicVotedOn
+        questionId={question.id}
+        questionSlug={slug}
+        questionOptions={questionOptions}
+      />
+
+      <ul className="mt-10">
+        {questionOptions.map((option, index) => (
+          <li key={option.id}>
+            <p>
+              <strong>{option.text}: </strong>
+              <span>{votes[index]}</span>
+            </p>
+          </li>
+        ))}
       </ul>
     </div>
   );
