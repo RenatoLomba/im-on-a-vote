@@ -35,8 +35,8 @@ export const QuestionDetails: FC<{ slug: string }> = ({ slug }) => {
       <h1 className="text-2xl font-bold">{question.title}</h1>
 
       <ul>
-        {(question.options as string[])?.map((option) => (
-          <li key={option}>{option}</li>
+        {(question.options as { id: string; text: string }[])?.map((option) => (
+          <li key={option.id}>{option.text}</li>
         ))}
       </ul>
     </div>

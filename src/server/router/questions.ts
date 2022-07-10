@@ -1,4 +1,5 @@
 import slugify from 'slugify';
+import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
 
 import * as trpc from '@trpc/server';
@@ -67,7 +68,10 @@ export const questionRouter = createRouter()
           ownerToken: ctx.token,
           title: input.question,
           slug: slugify(input.question, { lower: true, trim: true }),
-          options: [],
+          options: input.options.map((option) => ({
+            text: option.text,
+            id: uuid(),
+          })),
         },
       });
     },
