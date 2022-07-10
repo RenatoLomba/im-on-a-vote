@@ -6,11 +6,13 @@ import { withTRPC } from '@trpc/next';
 
 import '../client/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { Header } from '../client/components/header';
 import { AppRouter } from '../server/router';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
+      <Header />
       <Component {...pageProps} />
       <ToastContainer />
     </>
